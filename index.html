@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Solicitação de Ordem de Serviço</title>
     <style>
         body {
@@ -45,26 +46,45 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
+            margin-top: 10px;
+            text-align: center;
+            text-decoration: none;
         }
         .btn:hover {
             background-color: #34495e;
         }
         .whatsapp-btn {
             background-color: #25D366;
-            margin-top: 10px;
         }
         .whatsapp-btn:hover {
             background-color: #128C7E;
+        }
+        .view-orders-btn {
+            background-color: #27ae60;
+        }
+        .view-orders-btn:hover {
+            background-color: #2ecc71;
+        }
+        /* Responsiveness */
+        @media screen and (max-width: 600px) {
+            .container {
+                padding: 15px;
+                margin: 0 10px;
+            }
+            .btn {
+                padding: 10px;
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>Solicitação de Ordem de Serviço</h2>
-        <form id="serviceOrderForm">
+        <form id="serviceOrderForm" aria-label="Formulário de Ordem de Serviço">
             <div class="form-group">
                 <label for="clientName">Nome Completo</label>
-                <input type="text" id="clientName" name="clientName" required>
+                <input type="text" id="clientName" name="clientName" required aria-required="true">
             </div>
 
             <div class="form-group">
@@ -74,12 +94,12 @@
 
             <div class="form-group">
                 <label for="address">Endereço Completo</label>
-                <textarea id="address" name="address" rows="3" required></textarea>
+                <textarea id="address" name="address" rows="3" required aria-required="true"></textarea>
             </div>
 
             <div class="form-group">
                 <label for="serviceType">Tipo de Serviço</label>
-                <select id="serviceType" name="serviceType" required>
+                <select id="serviceType" name="serviceType" required aria-required="true">
                     <option value="">Selecione um serviço</option>
                     <option value="1">Infiltração</option>
                     <option value="2">Pintura</option>
@@ -97,26 +117,30 @@
 
             <div class="form-group">
                 <label for="serviceDetails">Detalhes do Serviço</label>
-                <textarea id="serviceDetails" name="serviceDetails" rows="4" required></textarea>
+                <textarea id="serviceDetails" name="serviceDetails" rows="4" required aria-required="true"></textarea>
             </div>
 
             <div class="form-group">
                 <label for="preferredDate">Data Preferencial</label>
-                <input type="date" id="preferredDate" name="preferredDate" required>
+                <input type="date" id="preferredDate" name="preferredDate" required aria-required="true">
             </div>
 
             <div class="form-group">
                 <label for="preferredTime">Horário Preferencial</label>
-                <input type="time" id="preferredTime" name="preferredTime" required>
+                <input type="time" id="preferredTime" name="preferredTime" required aria-required="true">
             </div>
 
-            <button type="submit" class="btn">Gerar Ordem de Serviço</button>
+            <button type="submit" class="btn" aria-label="Gerar Ordem de Serviço">Gerar Ordem de Serviço</button>
             
-            <a href="#" id="whatsappBtn" class="btn whatsapp-btn">
+            <a href="#" id="whatsappBtn" class="btn whatsapp-btn" aria-label="Enviar via WhatsApp">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp_logo_svg.svg" 
                      alt="WhatsApp" 
                      style="width:20px; vertical-align:middle; margin-right:10px;">
                 Enviar via WhatsApp
+            </a>
+
+            <a href="order-list.html" class="btn view-orders-btn" aria-label="Visualizar Ordens de Serviço">
+                Visualizar Ordens de Serviço
             </a>
         </form>
     </div>
@@ -152,6 +176,7 @@
                 return await response.json();
             } catch (error) {
                 console.error('Erro:', error);
+                alert('Erro ao enviar ordem de serviço. Por favor, tente novamente.');
                 return null;
             }
         }
@@ -159,6 +184,12 @@
         // Manipulador de envio do formulário
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
+
+            // Validação básica de formulário
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
 
             // Gerar número da ordem de serviço
             const orderNumber = generateOrderNumber();
@@ -181,8 +212,6 @@
             if (result) {
                 // Redirecionar para página de acompanhamento
                 window.location.href = `https://seu-sistema-interno.com/acompanhamento?os=${orderNumber}`;
-            } else {
-                alert('Erro ao gerar ordem de serviço. Tente novamente.');
             }
         });
 
@@ -190,7 +219,7 @@
         whatsappBtn.addEventListener('click', function(e) {
             e.preventDefault();
             const phoneNumber = "5515981271331"; // Número de contato
-            window.open(`https://wa.me/${phoneNumber}`, '_blank');
+            window.open(`https://wa.me/${phoneNumber}`, '_blank', 'noopener,noreferrer');
         });
     });
     </script>
